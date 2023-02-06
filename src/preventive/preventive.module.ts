@@ -1,19 +1,18 @@
 import { Module } from '@nestjs/common';
-import { PreventiveService } from './preventive.service';
-import { PreventiveController } from './preventive.controller';
 import { HttpModule } from '@nestjs/axios';
 import { UpdateSendMailPreventiveService } from './services/updateSendMail-preventive.service';
+import { PreventiveService } from './services/preventive.service';
 
 @Module({
   imports: [
     HttpModule.registerAsync({
       useFactory: () => ({
-        timeout: 5000,
+        timeout: 20000,
         maxRedirects: 5,
       }),
     })
   ],
-  controllers: [PreventiveController],
+  controllers: [],
   providers: [
     PreventiveService,
     UpdateSendMailPreventiveService

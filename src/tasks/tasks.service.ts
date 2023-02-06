@@ -2,14 +2,10 @@
 
 import { Injectable } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
-import { PreventiveService } from 'src/preventive/preventive.service';
+import { PreventiveService } from 'src/preventive/services/preventive.service';
 import { UpdateSendMailPreventiveService } from 'src/preventive/services/updateSendMail-preventive.service';
 import { urls } from 'src/utils/urls';
 import { MailTasksDto } from './dto/mail-tasks.dto';
-
-const url1 = 'http://localhost:3001/preventive/expire';
-const url2 = 'http://localhost:3001/maintenances/mail';
-const url3 = 'http://localhost:3001/preventive/updatesendmail';
 
 @Injectable()
 export class TasksService {
@@ -18,7 +14,7 @@ export class TasksService {
         private readonly updateSendMailPreventiveService: UpdateSendMailPreventiveService
     ) { }
 
-    @Cron('0 28 14 * * 0-6')
+    @Cron('0 38 14 * * 0-6')
     async consultMaintenances() {
         let dataArray: MailTasksDto[] = [];
         let idsToUpdate: number[] = [];

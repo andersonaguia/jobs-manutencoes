@@ -1,0 +1,10 @@
+version: '1.0'
+services: 
+  nestjs:
+    image: jobs-manutencoes
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: build
+    ports: 
+      - 3002:3002

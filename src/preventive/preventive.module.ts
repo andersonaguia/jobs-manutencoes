@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { PreventiveService } from './preventive.service';
 import { PreventiveController } from './preventive.controller';
 import { HttpModule } from '@nestjs/axios';
+import { UpdateSendMailPreventiveService } from './services/updateSendMail-preventive.service';
 
 @Module({
   imports: [
@@ -13,7 +14,13 @@ import { HttpModule } from '@nestjs/axios';
     })
   ],
   controllers: [PreventiveController],
-  providers: [PreventiveService],
-  exports: [PreventiveService]
+  providers: [
+    PreventiveService,
+    UpdateSendMailPreventiveService
+  ],
+  exports: [
+    PreventiveService,
+    UpdateSendMailPreventiveService
+  ]
 })
 export class PreventiveModule { }

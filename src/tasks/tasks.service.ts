@@ -14,7 +14,7 @@ export class TasksService {
         private readonly updateSendMailPreventiveService: UpdateSendMailPreventiveService
     ) { }
 
-    @Cron('0 38 14 * * 0-6')
+    @Cron('0 00 07 * * 0-6')
     async consultMaintenances() {
         let dataArray: MailTasksDto[] = [];
         let idsToUpdate: number[] = [];

@@ -1,7 +1,7 @@
 version: '1.0'
 services: 
   nestjs:
-    image: jobs-manutencoes
+    image: jobs-manutencoes:1.0
     build:
       context: .
       dockerfile: Dockerfile

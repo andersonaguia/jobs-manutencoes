@@ -1,5 +1,3 @@
-
-
 import { Injectable } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import { PreventiveService } from 'src/preventive/services/preventive.service';
@@ -13,24 +11,34 @@ export class TasksService {
         private readonly preventiveService: PreventiveService,
         private readonly updateSendMailPreventiveService: UpdateSendMailPreventiveService
     ) { }
-
+    
     @Cron('0 00 07 * * 0-6')
-    async consultMaintenances() {
+    async tryJobMaintenances() {
+        await this.job();        
+    }
+
+    @Cron('0 00 09 * * 0-6')
+    async tryJobMaintenancesAgain() {
+        await this.job();        
+    }
+
+    async job(){
         let dataArray: MailTasksDto[] = [];
         let idsToUpdate: number[] = [];
 
-        try {
+        try {           
             const allMailAddresses = await this.preventiveService.findAll(urls.findAllMailAddresses);
             if (allMailAddresses.length < 1) {
                 return
-            }            
+            }                     
 
             const mailAddresses = allMailAddresses.map((address) => {
                 return address.address
             })
-
+           
             const response = await this.preventiveService.findAll(urls.findAllPreventives);
-            const { body } = response;            
+            const { body } = response;   
+                 
             if (body.length > 0) {
                 body.map((el, i) => {
                     const data = new MailTasksDto();
@@ -52,7 +60,7 @@ export class TasksService {
                 if (+data.body.statusCode === 201) {
                     const result = await this.updateSendMailPreventiveService.updateSendMail(urls.updateSendMailDatabase, idsToUpdate);
                     if (+result.status === 200) {
-                        //console.log("Deu tudo certo");
+                        console.log("Deu tudo certo");
                         return
                     }
                     const data = new MailTasksDto();

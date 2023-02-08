@@ -13,13 +13,15 @@ export class TasksService {
     ) { }
     
     @Cron('0 00 07 * * 0-6')
-    async tryJobMaintenances() {
-        await this.job();        
+    async checkMaintenance() {
+        await this.job();  
+        return      
     }
 
-    @Cron('0 00 09 * * 0-6')
-    async tryJobMaintenancesAgain() {
-        await this.job();        
+    @Cron('0 08 14 * * 0-6')
+    async tryCheckMaintenanceAgain() {
+        await this.job();  
+        return      
     }
 
     async job(){
@@ -40,7 +42,10 @@ export class TasksService {
             const { body } = response;   
                  
             if (body.length > 0) {
-                body.map((el, i) => {
+                body.map((el) => {
+                    const lastDate = new Date(el.last);
+                    const nextDate = new Date(el.next);
+
                     const data = new MailTasksDto();
                     data.addresses = mailAddresses;
                     data.subject = "Aviso de Manutenção Próxima (não responder)";
@@ -48,8 +53,8 @@ export class TasksService {
                 <strong>Atividade: </strong>${el.activity}<br>
                 <strong>Periodicidade: </strong>${el.frequency}<br>
                 <strong>Responsável: </strong>${el.responsible}<br>
-                <strong>Última Realizada: </strong>${new Date(el.last).toLocaleDateString()}<br>
-                <strong>Data prevista para execução: </strong>${new Date(el.next).toLocaleDateString()}<br>`;
+                <strong>Última Realizada: </strong>${(this.addZeroToDate(lastDate.getDate().toString()) + "/" + (this.addZeroToDate(lastDate.getMonth()+1).toString()) + "/" + lastDate.getFullYear())}<br>
+                <strong>Data prevista para execução: </strong>${(this.addZeroToDate(nextDate.getDate().toString()) + "/" + (this.addZeroToDate(nextDate.getMonth()+1).toString()) + "/" + nextDate.getFullYear())}<br>`;
 
                     dataArray.push(data);
                     idsToUpdate.push(el.id);
@@ -84,5 +89,12 @@ export class TasksService {
             console.log("Erro no sistema: ", error);
             return
         }
+    }
+
+    addZeroToDate(number: any){
+        if (number <= 9) 
+            return "0" + number;
+        else
+            return number; 
     }
 }
